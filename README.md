@@ -1,7 +1,8 @@
 # Crashtest
 
-<img src="./images/crash_test_dummy.png" alt="crash_test_dummy" height="350"/>
-
+<p align="center">
+    <img src="./images/crash_test_dummy.png" alt="crash_test_dummy" height="350"/>
+</p>
 - [Description](#description)
 - [Requirements](#requirements)
 - [Installation](#installation)
