@@ -10,9 +10,7 @@ authors = [
     { name = "utox39", email = "email@email.com" },
 ]
 description = "A command-line tool to create a multipass instance and transfer a project you want to test"
-# TODO: Scrivere readme
 readme = "README.md"
-# TODO: trovare una suit per i test che testi con diverse versioni e capire qual è la versione minima
 requires-python = ">=3.7"
 classifiers = [
     "Programming Language :: Python :: 3",
