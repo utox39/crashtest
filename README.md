@@ -38,7 +38,7 @@ $ crashtest --instance-name INSTANCE_NAME --project PROJECT
 #### Delete the instance after finishing to test
 
 ```console
-crashtest --instance-name INSTANCE_NAME --project PROJECT --delete
+$ crashtest --instance-name INSTANCE_NAME --project PROJECT --delete
 ```
 
 ## Contributing
