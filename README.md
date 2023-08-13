@@ -10,12 +10,13 @@
 
 ## Description
 
-Crashtest is command-line tool to create a Multipass instance and transfer a project to test to the newly created
+Crashtest is command-line tool to create a [Multipass](https://multipass.run/) instance and transfer a project to test
+to the newly created
 instance.
 
 ## Requirements
 
-- Python
+- Python 3
 - [Multipass](https://multipass.run/)
 
 ## Installation
