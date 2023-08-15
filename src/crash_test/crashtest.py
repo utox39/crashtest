@@ -8,6 +8,33 @@ from shutil import which
 from sys import exit
 
 
+def args_parser():
+    parser = argparse.ArgumentParser(
+        description="Create a multipass instance to test your dAnGeRoUs project",
+        formatter_class=argparse.RawDescriptionHelpFormatter
+    )
+
+    parser.add_argument("-i",
+                        "--instance-name",
+                        type=str,
+                        required=True,
+                        help="Multipass instance name"
+                        )
+    parser.add_argument("-p",
+                        "--project",
+                        type=str,
+                        required=True,
+                        help="Project file/folder to transfer to the multipass instance to be tested"
+                        )
+    parser.add_argument("-d",
+                        "--delete",
+                        action="store_true",
+                        help="Delete the instance"
+                        )
+
+    return parser.parse_args()
+
+
 class CrashTest:
 
     def __init__(self, args):
@@ -103,30 +130,7 @@ class CrashTest:
 
 
 def main():
-    parser = argparse.ArgumentParser(
-        description="Create a multipass instance to test your dAnGeRoUs project",
-        formatter_class=argparse.RawDescriptionHelpFormatter
-    )
-
-    parser.add_argument("-i",
-                        "--instance-name",
-                        type=str,
-                        help="Multipass instance name"
-                        )
-    parser.add_argument("-p",
-                        "--project",
-                        type=str,
-                        help="Project file/folder to transfer to the multipass instance to be tested"
-                        )
-    parser.add_argument("-d",
-                        "--delete",
-                        action="store_true",
-                        help="Delete the instance"
-                        )
-
-    args = parser.parse_args()
-
-    crash_test: CrashTest = CrashTest(args=args)
+    crash_test: CrashTest = CrashTest(args=args_parser())
     crash_test.run()
 
 
