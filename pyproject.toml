@@ -5,9 +5,8 @@ build-backend = "hatchling.build"
 [project]
 name = "crash-test"
 version = "0.0.1"
-# TODO: creare email per queste cose
 authors = [
-    { name = "utox39", email = "email@email.com" },
+    { name = "utox39", email = " francescomoccaldi39@gmail.com" },
 ]
 description = "A command-line tool to create a multipass instance and transfer a project you want to test"
 readme = "README.md"
