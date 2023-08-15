@@ -56,14 +56,14 @@ class CrashTest:
         if "_" in self.args.instance_name:
             instance_name: str = self.args.instance_name
             correct_format: str = instance_name.replace("_", "-")
-            print(f"Crashtest: error: invalid instance name. The instance name should be like this: {correct_format}")
+            print(f"crashtest: error: invalid instance name. The instance name should be like this: {correct_format}")
         else:
             instance_name_check = True
 
         if os.path.exists(self.args.project):
             project_check = True
         else:
-            print(f"Crashtest: error: cannot access {self.args.project}: No such file or directory")
+            print(f"crashtest: error: cannot access {self.args.project}: No such file or directory")
 
         if instance_name_check and project_check:
             return True
@@ -79,7 +79,7 @@ class CrashTest:
         result = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
 
         if result.returncode != 0:
-            print(f"Multipass: error: {result.stderr}")
+            print(f"multipass: error: {result.stderr}")
             exit(result.returncode)
 
     def create_test_instance(self) -> None:
