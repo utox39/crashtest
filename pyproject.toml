@@ -10,7 +10,7 @@ authors = [
 ]
 description = "A command-line tool to create a Multipass instance and transfer a project to test to the newly created instance"
 readme = "README.md"
-requires-python = ">=3.7"
+requires-python = ">=3.10"
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
