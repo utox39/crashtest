@@ -23,7 +23,7 @@ to the newly created instance.
 ## Installation
 
 ```console
-$ pip install crash-test
+$ pip install crash-test-multipass
 ```
 
 ## Usage
