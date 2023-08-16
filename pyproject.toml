@@ -14,7 +14,6 @@ requires-python = ">=3.7"
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
-    # TODO: testare su windows, se positivo lasciare così altrimenti usare Unix
     "Operating System :: OS Independent",
 ]
 
