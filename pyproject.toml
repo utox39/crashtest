@@ -8,7 +8,7 @@ version = "0.0.1"
 authors = [
     { name = "utox39", email = " francescomoccaldi39@gmail.com" },
 ]
-description = "A command-line tool to create a multipass instance and transfer a project you want to test"
+description = "A command-line tool to create a Multipass instance and transfer a project to test to the newly created instance"
 readme = "README.md"
 requires-python = ">=3.7"
 classifiers = [
