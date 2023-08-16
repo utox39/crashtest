@@ -12,7 +12,7 @@
 
 ## Description
 
-Crashtest is command-line tool to create a [Multipass](https://multipass.run/) instance and transfer a project to test
+Crashtest is a command-line tool to create a [Multipass](https://multipass.run/) instance and transfer a project to test
 to the newly created
 instance.
 
