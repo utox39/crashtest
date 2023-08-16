@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "crash-test"
+name = "crash-test-multipass"
 version = "0.0.1"
 authors = [
     { name = "utox39", email = " francescomoccaldi39@gmail.com" },
