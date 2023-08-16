@@ -6,6 +6,7 @@ import subprocess
 
 from shutil import which
 from sys import exit
+from typing import List
 
 
 def args_parser():
@@ -58,10 +59,10 @@ class CrashTest:
             correct_format: str = instance_name.replace("_", "-")
             print(f"crashtest: error: invalid instance name. The instance name should be like this: {correct_format}")
         else:
-            instance_name_check = True
+            instance_name_check: bool = True
 
         if os.path.exists(self.args.project):
-            project_check = True
+            project_check: bool = True
         else:
             print(f"crashtest: error: cannot access {self.args.project}: No such file or directory")
 
@@ -88,22 +89,21 @@ class CrashTest:
         """
         if which("multipass") is not None:
             if self.args_check():
-                # TODO: migliorare l'output
                 print("Creating multipass instance...\n")
                 # creates multipass session
-                multipass_launch_command = ["multipass", "launch", "--name", self.args.instance_name]
+                multipass_launch_command: List[str] = ["multipass", "launch", "--name", self.args.instance_name]
                 self.execute_multipass_command(multipass_launch_command)
                 print(f"Instance {self.args.instance_name} created successfully!\n")
 
                 print("Transferring the project...\n")
                 # transfers the specified project to the multipass session
-                multipass_transfer_command = ["multipass", "transfer", "-r", f"{self.args.project}/",
-                                              f"{self.args.instance_name}:."]
+                multipass_transfer_command: List[str] = ["multipass", "transfer", "-r", f"{self.args.project}/",
+                                                         f"{self.args.instance_name}:."]
                 self.execute_multipass_command(multipass_transfer_command)
                 print(f"{self.args.project} transferred successfully!\n")
 
                 print("Opening the shell...\n")
-                multipass_shell_command = ["multipass", "shell", self.args.instance_name]
+                multipass_shell_command: List[str] = ["multipass", "shell", self.args.instance_name]
                 subprocess.run(multipass_shell_command)
         else:
             print("Crashtest: error: Multipass is not installed!")
@@ -116,7 +116,7 @@ class CrashTest:
             case "y":
                 # Stops the instance
                 print("\nStopping the instance...\n")
-                multipass_stop_command = ["multipass", "stop", self.args.instance_name]
+                multipass_stop_command: List[str] = ["multipass", "stop", self.args.instance_name]
                 self.execute_multipass_command(multipass_stop_command)
                 print(f"Instance {self.args.instance_name} stopped\n")
 
