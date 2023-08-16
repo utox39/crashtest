@@ -1,9 +1,5 @@
 # Crashtest
 
-<p align="center">
-    <img src="./images/crash_test_dummy.png" alt="crash_test_dummy" height="350"/>
-</p>
-
 - [Description](#description)
 - [Requirements](#requirements)
 - [Installation](#installation)
@@ -23,7 +19,7 @@ to the newly created instance.
 ## Installation
 
 ```console
-$ pip install crash-test-multipass
+$ pip3 install --upgrade crash-test-multipass
 ```
 
 ## Usage
