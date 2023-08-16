@@ -3,5 +3,4 @@
 .vscode/
 .idea/
 venv/
-tests/
 __pycache__/
