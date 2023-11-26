@@ -138,7 +138,7 @@ class CrashTest:
         Delete the multipass instance if the -d --delete flag is specified
         """
         match input(
-            f"{BLUE}Are you sure you want to delete this instance? [{GREEN}Y{BLUE}/{RED}n{BLUE}]\n>>> {NC}"
+            "Are you sure you want to delete this instance? [Y/n]\n>>> "
         ).lower().strip():
             case "y":
                 # Stops the instance
