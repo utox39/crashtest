@@ -7,8 +7,8 @@ from shutil import which
 from sys import exit
 from typing import Final, List
 
-from args_check import args_check
-from dependecies_check import check_dependencies
+from utils.args_check import arguments_check
+from utils.dependecies_check import check_dependencies
 
 GREEN: Final[str] = "\033[1;32m"
 YELLOW: Final[str] = "\033[1m\033[33m"
@@ -54,6 +54,12 @@ class CrashTest:
     def __init__(self, args):
         self.args = args
 
+        if self.args.project.endswith("/"):
+            self.args.project = self.args.project[:-1]
+
+        # The project name without the path
+        self.project_name = self.args.project[self.args.project.rfind("/") + 1:]
+
     def run(self):
         self.create_test_instance()
 
@@ -82,12 +88,12 @@ class CrashTest:
             print(f"{GREEN}Installing dependencies...{NC}")
 
             create_script_command = ["multipass", "exec", f"{self.args.instance_name}", "--", "sh", "-c",
-                                     f'echo "{script_content}" > ./{self.args.project}/python_dependencies.sh']
+                                     f'echo "{script_content}" > ./{self.project_name}/python_dependencies.sh']
 
             self.execute_multipass_command(create_script_command)
 
             run_script_command = ["multipass", "exec", f"{self.args.instance_name}", "--", "bash",
-                                  f"./{self.args.project}/python_dependencies.sh"]
+                                  f"./{self.project_name}/python_dependencies.sh"]
 
             self.execute_multipass_command(run_script_command)
         else:
@@ -98,7 +104,7 @@ class CrashTest:
         Creates a Multipass instance and transfer the specified project to the newly created instance
         """
         if which("multipass") is not None:
-            if args_check(instance_name=self.args.instance_name, project=self.args.project):
+            if arguments_check(instance_name=self.args.instance_name, project_path=self.args.project):
                 # creates multipass session
                 print(f"{GREEN}Creating multipass instance...\n{NC}")
                 multipass_launch_command: List[str] = ["multipass", "launch", "--name", self.args.instance_name]
@@ -110,7 +116,7 @@ class CrashTest:
                 multipass_transfer_command: List[str] = ["multipass", "transfer", "-r", f"{self.args.project}/",
                                                          f"{self.args.instance_name}:."]
                 self.execute_multipass_command(multipass_transfer_command)
-                print(f"{GREEN}{self.args.project} transferred successfully!\n{NC}")
+                print(f"{GREEN}{self.project_name} transferred successfully!\n{NC}")
 
                 # Install the dependencies
                 if self.args.install_dependencies:

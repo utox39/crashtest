@@ -18,33 +18,28 @@ def instance_name_check(instance_name) -> bool:
         return True
 
 
-def project_check(project) -> bool:
+def project_check(project_path) -> bool:
     """
     Check if the provided project is in the pwd and exists
-    :param project: project name
-    :return: Bool: False if the provided project is not in the cwd or the project does not exist;
-                   False if the provided project is a single file.
+    :param project_path: project name
+    :return: Bool: False if the provided project is a single file.
                    True if the provided project exists.
     """
-    if project not in os.listdir(os.curdir):
-        print("Please only provide projects that are in the current working directory.")
+    if os.path.isfile(project_path):
+        print("Please only provide project directories. Single files are not allowed.")
         return False
 
-    if os.path.isfile(project):
-        print("Please only provide project directory. Single files are not allowed.")
-        return False
-
-    if os.path.exists(project):
+    if os.path.exists(project_path):
         return True
     else:
-        print(f"crashtest: error: cannot access {project}: No such file or directory.")
+        print(f"crashtest: error: cannot access {project_path}: No such file or directory.")
         return False
 
 
-def args_check(instance_name, project) -> bool:
+def arguments_check(instance_name, project_path) -> bool:
     """
     Check the instance name format and project
     :return: bool: True if the checks pass;
                    False if the checks fails.
     """
-    return instance_name_check(instance_name) and project_check(project)
+    return instance_name_check(instance_name) and project_check(project_path)
