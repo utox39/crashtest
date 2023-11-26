@@ -2,7 +2,7 @@
 
 import os
 
-from script_generator import script_generator
+from .script_generator import script_generator
 
 
 def check_dependencies(project_path: str) -> str:
