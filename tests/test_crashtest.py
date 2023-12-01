@@ -1,12 +1,14 @@
-import pytest
 import subprocess
-
 from unittest.mock import patch
 
-from crash_test.crashtest import CrashTest
+import pytest
+
+import crash_test.error_codes
 from crash_test.args_checker import instance_name_check, project_check
-from crash_test.script_generator import script_generator
+from crash_test.crashtest import CrashTest
 from crash_test.dependecies_checker import check_dependencies
+from crash_test.error_logger import log_error
+from crash_test.script_generator import script_generator
 
 
 @pytest.fixture
@@ -79,6 +81,60 @@ class TestDependencyCheck:
         assert script_content is not None
 
 
+class TestErrorLogger:
+    def test_log_error_returns_error_message(self):
+        """
+        Tests that log_error() returns the correct error message based on the error code.
+        """
+        yellow = "\033[1m\033[33m"
+        red = "\033[0;31m"
+        # No colors
+        nc = "\033[0m"
+
+        error_codes = [crash_test.error_codes.NO_SUCH_FILE_OR_DIRECTORY_ERROR,
+                       crash_test.error_codes.SINGLE_FILE_ERROR,
+                       crash_test.error_codes.MULTIPASS_GENERIC_ERROR,
+                       crash_test.error_codes.MULTIPASS_NOT_INSTALLED_ERROR,
+                       crash_test.error_codes.INVALID_INSTANCE_NAME_ERROR,
+                       crash_test.error_codes.NO_DEPENDENCIES_FOUND_ERROR,
+                       crash_test.error_codes.NO_SUPPORTED_REQUIREMENTS_FILE_FOUND_ERROR
+                       ]
+
+        test_project_path = "test/path"
+
+        for error in error_codes:
+            match error:
+                case crash_test.error_codes.NO_SUCH_FILE_OR_DIRECTORY_ERROR:
+                    assert (log_error(
+                        error_code=crash_test.error_codes.NO_SUCH_FILE_OR_DIRECTORY_ERROR,
+                        project_path=test_project_path
+                    ) == f"crashtest: error: cannot access {test_project_path}: No such file or directory.") is True
+                case crash_test.error_codes.SINGLE_FILE_ERROR:
+                    assert (log_error(
+                        error_code=crash_test.error_codes.SINGLE_FILE_ERROR
+                    ) == "Please only provide project directories. Single files are not allowed.") is True
+                case crash_test.error_codes.MULTIPASS_GENERIC_ERROR:
+                    assert (log_error(
+                        error_code=crash_test.error_codes.MULTIPASS_GENERIC_ERROR
+                    ) == f"{red}multipass: error: ") is True
+                case crash_test.error_codes.MULTIPASS_NOT_INSTALLED_ERROR:
+                    assert (log_error(
+                        error_code=crash_test.error_codes.MULTIPASS_NOT_INSTALLED_ERROR
+                    ) == "crashtest: error: Multipass is not installed!") is True
+                case crash_test.error_codes.INVALID_INSTANCE_NAME_ERROR:
+                    assert (log_error(
+                        error_code=crash_test.error_codes.INVALID_INSTANCE_NAME_ERROR
+                    ) == "crashtest: error: invalid instance name. The instance name should be like this: ") is True
+                case crash_test.error_codes.NO_DEPENDENCIES_FOUND_ERROR:
+                    assert (log_error(
+                        error_code=crash_test.error_codes.NO_DEPENDENCIES_FOUND_ERROR
+                    ) == f"{yellow}No dependencies detected.{nc}\n") is True
+                case crash_test.error_codes.NO_SUPPORTED_REQUIREMENTS_FILE_FOUND_ERROR:
+                    assert (log_error(
+                        error_code=crash_test.error_codes.NO_SUPPORTED_REQUIREMENTS_FILE_FOUND_ERROR
+                    ) == f"{yellow}No supported project requirements file was found!{nc}\n") is True
+
+
 class TestCrashTest:
     def test_execute_multipass_command(self, mock_multipass_command_execution):
         """
@@ -87,8 +143,8 @@ class TestCrashTest:
         :param mock_multipass_command_execution: function that mocks the execution of multipass commands
         """
         mock_multipass_command_execution.return_value.returncode = 0
-        crash_test = CrashTest(None)
-        crash_test.execute_multipass_command(["multipass", "launch", "--name", "test-instance"])
+        crashtest = CrashTest(None)
+        crashtest.execute_multipass_command(["multipass", "launch", "--name", "test-instance"])
         mock_multipass_command_execution.assert_called_once_with(
             ["multipass", "launch", "--name", "test-instance"],
             stdout=subprocess.PIPE,
