@@ -2,17 +2,17 @@
 
 import argparse
 import subprocess
-
 from shutil import which
 from sys import exit
 from typing import Final, List
 
-from utils.args_check import arguments_check
-from utils.dependecies_check import check_dependencies
+import crash_test.error_codes
+from crash_test.args_checker import arguments_check
+from crash_test.dependecies_checker import check_dependencies
+from crash_test.error_logger import log_error
 
 GREEN: Final[str] = "\033[1;32m"
 YELLOW: Final[str] = "\033[1m\033[33m"
-BLUE: Final[str] = "\033[1m\033[34m"
 RED: Final[str] = "\033[0;31m"
 # No colors
 NC: Final[str] = "\033[0m"
@@ -54,14 +54,14 @@ class CrashTest:
     def __init__(self, args):
         self.args = args
 
-        if self.args.project.endswith("/"):
+        if self.args is not None and self.args.project.endswith("/"):
             self.args.project = self.args.project[:-1]
 
-        # The project name without the path
-        self.project_name = self.args.project[self.args.project.rfind("/") + 1:]
+            # The project name without the path
+            self.project_name = self.args.project[self.args.project.rfind("/") + 1:]
 
     def run(self):
-        self.create_test_instance()
+        self.create_instance()
 
     @staticmethod
     def execute_multipass_command(command) -> None:
@@ -75,7 +75,7 @@ class CrashTest:
             print(f"Output: {result.stdout}")
 
         if result.returncode != 0:
-            print(f"{RED}multipass: error: {result.stderr}{NC}")
+            print(f"{log_error(error_code=crash_test.error_codes.MULTIPASS_GENERIC_ERROR)}{result.stderr}{NC}")
             exit(result.returncode)
 
     def install_dependencies(self) -> None:
@@ -97,9 +97,9 @@ class CrashTest:
 
             self.execute_multipass_command(run_script_command)
         else:
-            print(f"{YELLOW}No dependencies detected.{NC}\n")
+            print(log_error(error_code=crash_test.error_codes.NO_DEPENDENCIES_FOUND_ERROR))
 
-    def create_test_instance(self) -> None:
+    def create_instance(self) -> None:
         """
         Creates a Multipass instance and transfer the specified project to the newly created instance
         """
@@ -131,7 +131,7 @@ class CrashTest:
                 if self.args.delete:
                     self.delete_instance()
         else:
-            print("Crashtest: error: Multipass is not installed!")
+            print(log_error(error_code=crash_test.error_codes.MULTIPASS_NOT_INSTALLED_ERROR))
 
     def delete_instance(self) -> None:
         """
@@ -157,8 +157,8 @@ class CrashTest:
 
 
 def main():
-    crash_test: CrashTest = CrashTest(args=args_parser())
-    crash_test.run()
+    crashtest: CrashTest = CrashTest(args=args_parser())
+    crashtest.run()
 
 
 if __name__ == '__main__':
