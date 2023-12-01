@@ -4,7 +4,7 @@ from unittest.mock import patch
 import pytest
 
 import crash_test.error_codes
-from crash_test.args_checker import instance_name_check, project_check
+from crash_test.args_checker import instance_name_check, project_check, arguments_check
 from crash_test.crashtest import CrashTest
 from crash_test.dependecies_checker import check_dependencies
 from crash_test.error_logger import log_error
@@ -37,15 +37,40 @@ class TestArgsCheck:
         """
         Tests that when the project path is valid the function returns True
         """
-        project_folder = tmp_path / "test_project"
-        project_folder.mkdir()
-        assert project_check(project_folder) is True
+        temp_test_project_folder = tmp_path / "test_project"
+        temp_test_project_folder.mkdir()
+        assert project_check(temp_test_project_folder) is True
 
     def test_project_check_non_existent_project_invalid(self):
         """
         Tests that when the project path does not exist the function returns False
         """
         assert project_check("non_existent_project") is False
+
+    def test_project_check_is_file(self, tmp_path):
+        temp_test_project_folder = tmp_path / "test_project"
+        temp_test_project_folder.mkdir()
+
+        with open(f"{temp_test_project_folder}/requirements.txt", "w") as file:
+            file.write("test")
+
+        assert project_check(f"{temp_test_project_folder}/requirements.txt") is False
+
+    def test_project_check_returns_true(self, tmp_path):
+        temp_test_project_folder = tmp_path / "test_project"
+        temp_test_project_folder.mkdir()
+        assert arguments_check(instance_name="valid-instance-name", project_path=temp_test_project_folder) is True
+
+    def test_project_check_returns_false_with_invalid_instance_and_path(self):
+        assert arguments_check(instance_name="invalid_instance_name", project_path="invalid/path") is False
+
+    def test_project_check_returns_false_with_invalid_instance_and_valid_path(self, tmp_path):
+        temp_test_project_folder = tmp_path / "test_project"
+        temp_test_project_folder.mkdir()
+        assert arguments_check(instance_name="invalid_instance_name", project_path=temp_test_project_folder) is False
+
+    def test_project_check_returns_false_with_valid_instance_and_invalid_path(self):
+        assert arguments_check(instance_name="valid-instance-name", project_path="invalid/path") is False
 
 
 class TestScriptGenerator:
@@ -75,10 +100,13 @@ class TestDependencyCheck:
         tmp_project_path.mkdir()
 
         with open(f"{tmp_project_path}/requirements.txt", "w") as file:
-            file.write("colorama>=0.4.6")
+            file.write("test")
 
         script_content = check_dependencies(project_path=str(tmp_project_path))
         assert script_content is not None
+
+    def test_check_dependencies_non_existent_path(self):
+        assert check_dependencies(project_path="invalid/path") is None
 
 
 class TestErrorLogger:
