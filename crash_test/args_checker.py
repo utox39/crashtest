@@ -2,6 +2,8 @@
 
 import os
 
+from crash_test.error_logger import log_error
+
 
 def instance_name_check(instance_name) -> bool:
     """
@@ -12,7 +14,7 @@ def instance_name_check(instance_name) -> bool:
     """
     if "_" in instance_name:
         correct_format: str = instance_name.replace("_", "-")
-        print(f"crashtest: error: invalid instance name. The instance name should be like this: {correct_format}.")
+        print(f"{log_error(error_code=304)}{correct_format}.")
         return False
     else:
         return True
@@ -26,13 +28,13 @@ def project_check(project_path) -> bool:
                    True if the provided project exists.
     """
     if os.path.isfile(project_path):
-        print("Please only provide project directories. Single files are not allowed.")
+        print(log_error(error_code=301))
         return False
 
     if os.path.exists(project_path):
         return True
     else:
-        print(f"crashtest: error: cannot access {project_path}: No such file or directory.")
+        print(log_error(error_code=300, project_path=project_path))
         return False
 
 
