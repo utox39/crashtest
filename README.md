@@ -31,9 +31,6 @@ to the newly created instance.
 $ pip3 install --upgrade crash-test-multipass
 ```
 
-WARNING: If you are upgrading from version 0.0.3 to the latest version is advised to delete the old version and then
-install the new version
-
 NOTE: After installing crash-test-multipass with pip if you have not added ~/.local/bin (macOS/Linux) to $PATH you will
 be asked to do so with a warning that should look like this:
 
