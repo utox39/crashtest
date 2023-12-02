@@ -144,10 +144,10 @@ class CrashTest:
         """
         match input(
             "Are you sure you want to delete this instance? [Y/n]\n>>> "
-        ).lower().strip():
+        ).lower().strip()[0]:
             case "y":
                 # Stops the instance
-                print(f"\n{GREEN}Stopping the instance...{NC}\n")
+                print(f"\n{GREEN}Stopping the instance...{NC}")
                 multipass_stop_command: List[str] = ["multipass", "stop", self.args.instance_name]
                 self.execute_multipass_command(multipass_stop_command)
                 print(f"{GREEN}Instance {self.args.instance_name} stopped.{NC}\n")
