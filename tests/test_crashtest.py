@@ -1,5 +1,6 @@
 import argparse
 import subprocess
+from colorama import Fore, Style
 from unittest.mock import patch
 
 import pytest
@@ -145,7 +146,7 @@ class TestErrorLogger:
                 case crash_test.error_codes.MULTIPASS_GENERIC_ERROR:
                     assert (log_error(
                         error_code=crash_test.error_codes.MULTIPASS_GENERIC_ERROR
-                    ) == f"{red}multipass: error: ") is True
+                    ) == f"{Fore.RED}multipass: error: ") is True
                 case crash_test.error_codes.MULTIPASS_NOT_INSTALLED_ERROR:
                     assert (log_error(
                         error_code=crash_test.error_codes.MULTIPASS_NOT_INSTALLED_ERROR
@@ -157,11 +158,11 @@ class TestErrorLogger:
                 case crash_test.error_codes.NO_DEPENDENCIES_FOUND_ERROR:
                     assert (log_error(
                         error_code=crash_test.error_codes.NO_DEPENDENCIES_FOUND_ERROR
-                    ) == f"{yellow}No dependencies detected.{nc}\n") is True
+                    ) == f"{Fore.YELLOW}No dependencies detected.{Style.RESET_ALL}\n") is True
                 case crash_test.error_codes.NO_SUPPORTED_REQUIREMENTS_FILE_FOUND_ERROR:
                     assert (log_error(
                         error_code=crash_test.error_codes.NO_SUPPORTED_REQUIREMENTS_FILE_FOUND_ERROR
-                    ) == f"{yellow}No supported project requirements file was found!{nc}\n") is True
+                    ) == f"{Fore.YELLOW}No supported project requirements file was found!{Style.RESET_ALL}\n") is True
 
 
 class TestCrashTest:
