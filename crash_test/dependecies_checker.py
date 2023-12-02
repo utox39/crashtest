@@ -3,6 +3,7 @@
 import os
 from typing import Final
 
+import crash_test.error_codes
 from crash_test.error_logger import log_error
 from crash_test.script_generator import script_generator
 
@@ -18,6 +19,6 @@ def check_dependencies(project_path: str) -> str:
                 case "requirements.txt":
                     return script_generator(project_name=project_name, project_type="python")
                 case _:
-                    print(log_error(error_code=306))
+                    print(log_error(error_code=crash_test.error_codes.NO_SUPPORTED_REQUIREMENTS_FILE_FOUND_ERROR))
     else:
-        print(log_error(error_code=300, project_path=project_path))
+        print(log_error(error_code=crash_test.error_codes.NO_SUCH_FILE_OR_DIRECTORY_ERROR, project_path=project_path))
