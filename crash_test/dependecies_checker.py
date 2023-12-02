@@ -1,14 +1,10 @@
 #!/usr/bin/env python3
 
 import os
-from typing import Final
 
 import crash_test.error_codes
 from crash_test.error_logger import log_error
 from crash_test.script_generator import script_generator
-
-YELLOW: Final[str] = "\033[1m\033[33m"
-NC: Final[str] = "\033[0m"
 
 
 def check_dependencies(project_path: str) -> str:
