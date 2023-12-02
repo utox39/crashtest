@@ -1,3 +1,4 @@
+import argparse
 import subprocess
 from unittest.mock import patch
 
@@ -5,7 +6,7 @@ import pytest
 
 import crash_test.error_codes
 from crash_test.args_checker import instance_name_check, project_check, arguments_check
-from crash_test.crashtest import CrashTest
+from crash_test.crashtest import CrashTest, args_parser
 from crash_test.dependecies_checker import check_dependencies
 from crash_test.error_logger import log_error
 from crash_test.script_generator import script_generator
@@ -164,6 +165,20 @@ class TestErrorLogger:
 
 
 class TestCrashTest:
+    def test_args_parser(self):
+        with patch('argparse.ArgumentParser.parse_args', return_value=argparse.Namespace(
+                instance_name='test_instance',
+                project='test_project',
+                delete=True,
+                install_dependencies=True
+        )):
+            result = args_parser()
+
+        assert result.instance_name == 'test_instance'
+        assert result.project == 'test_project'
+        assert result.delete is True
+        assert result.install_dependencies is True
+
     def test_execute_multipass_command(self, mock_multipass_command_execution):
         """
         Tests that the mock was called exactly once and that that call was
