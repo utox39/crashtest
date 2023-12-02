@@ -52,6 +52,8 @@ $ crashtest --instance-name INSTANCE_NAME --project PROJECT
 
 #### Create a new instance, transfer a project and install the dependencies
 
+NOTE: Currently only requirements.txt (python) is supported
+
 ```console
 $ crashtest --instance-name INSTANCE_NAME --project PROJECT --install-dependencies
 ```
