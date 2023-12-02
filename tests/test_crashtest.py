@@ -110,16 +110,22 @@ class TestDependencyCheck:
     def test_check_dependencies_non_existent_path(self):
         assert check_dependencies(project_path="invalid/path") is None
 
+    def test_check_dependencies_unsupported_dependencies_file(self, tmp_path):
+        tmp_project_path = tmp_path / "test_project"
+        tmp_project_path.mkdir()
+
+        with open(f"{tmp_project_path}/unsupported_requirements.txt", "w") as file:
+            file.write("test")
+
+        script_content = check_dependencies(project_path=str(tmp_project_path))
+        assert script_content is None
+
 
 class TestErrorLogger:
     def test_log_error_returns_error_message(self):
         """
         Tests that log_error() returns the correct error message based on the error code.
         """
-        yellow = "\033[1m\033[33m"
-        red = "\033[0;31m"
-        # No colors
-        nc = "\033[0m"
 
         error_codes = [crash_test.error_codes.NO_SUCH_FILE_OR_DIRECTORY_ERROR,
                        crash_test.error_codes.SINGLE_FILE_ERROR,
