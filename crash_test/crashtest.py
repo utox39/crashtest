@@ -77,9 +77,7 @@ class CrashTest:
 
         if result.returncode != 0:
             print(
-                f"{log_error(
-                    error_code=crash_test.error_codes.MULTIPASS_GENERIC_ERROR
-                )}{result.stderr}{Style.RESET_ALL}"
+                f"{log_error(error_code=crash_test.error_codes.MULTIPASS_GENERIC_ERROR)}{result.stderr}{Style.RESET_ALL}"
             )
             exit(result.returncode)
 
