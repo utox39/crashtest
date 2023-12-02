@@ -1,9 +1,9 @@
 import argparse
 import subprocess
-from colorama import Fore, Style
 from unittest.mock import patch
 
 import pytest
+from colorama import Fore, Style
 
 import crash_test.error_codes
 from crash_test.args_checker import instance_name_check, project_check, arguments_check
