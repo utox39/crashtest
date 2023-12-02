@@ -4,5 +4,6 @@
 .idea/
 .pytest_cache/
 venv/
-__pycache__/
 dist/
+test_dir/
+__pycache__/
