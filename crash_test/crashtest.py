@@ -2,16 +2,17 @@
 
 import argparse
 import subprocess
-from colorama import Fore, Style
 from shutil import which
 from sys import exit
 from typing import List
 
+from colorama import Fore, Style
+
 import crash_test.error_codes
+from crash_test._version import __version__
 from crash_test.args_checker import arguments_check
 from crash_test.dependecies_checker import check_dependencies
 from crash_test.error_logger import log_error
-from crash_test._version import __version__
 
 
 def args_parser():
