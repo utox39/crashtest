@@ -4,5 +4,7 @@
 .idea/
 .pytest_cache/
 venv/
-__pycache__/
 dist/
+# Directory for testing purposes
+test_dir/
+__pycache__/

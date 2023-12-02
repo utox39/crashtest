@@ -29,7 +29,7 @@ crashtest = "crash_test.crashtest:main"
 "Bug Tracker" = "https://github.com/utox39/crashtest/issues"
 
 [tool.poetry.dependencies]
-python = "3.10"
+python = ">=3.10"
 
 
 [build-system]
