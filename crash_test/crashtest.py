@@ -2,21 +2,16 @@
 
 import argparse
 import subprocess
+from colorama import Fore, Style
 from shutil import which
 from sys import exit
-from typing import Final, List
+from typing import List
 
 import crash_test.error_codes
 from crash_test.args_checker import arguments_check
 from crash_test.dependecies_checker import check_dependencies
 from crash_test.error_logger import log_error
 from crash_test._version import __version__
-
-GREEN: Final[str] = "\033[1;32m"
-YELLOW: Final[str] = "\033[1m\033[33m"
-RED: Final[str] = "\033[0;31m"
-# No colors
-NC: Final[str] = "\033[0m"
 
 
 def args_parser():
@@ -80,7 +75,11 @@ class CrashTest:
             print(f"Output: {result.stdout}")
 
         if result.returncode != 0:
-            print(f"{log_error(error_code=crash_test.error_codes.MULTIPASS_GENERIC_ERROR)}{result.stderr}{NC}")
+            print(
+                f"{log_error(
+                    error_code=crash_test.error_codes.MULTIPASS_GENERIC_ERROR
+                )}{result.stderr}{Style.RESET_ALL}"
+            )
             exit(result.returncode)
 
     def install_dependencies(self) -> None:
@@ -90,7 +89,7 @@ class CrashTest:
         script_content = check_dependencies(self.args.project)
 
         if script_content:
-            print(f"{GREEN}Installing dependencies...{NC}")
+            print(f"{Fore.GREEN}Installing dependencies...{Style.RESET_ALL}")
 
             create_script_command = ["multipass", "exec", f"{self.args.instance_name}", "--", "sh", "-c",
                                      f'echo "{script_content}" > ./{self.project_name}/python_dependencies.sh']
@@ -111,24 +110,24 @@ class CrashTest:
         if which("multipass") is not None:
             if arguments_check(instance_name=self.args.instance_name, project_path=self.args.project):
                 # creates multipass session
-                print(f"{GREEN}Creating multipass instance...\n{NC}")
+                print(f"{Fore.GREEN}Creating multipass instance...\n{Style.RESET_ALL}")
                 multipass_launch_command: List[str] = ["multipass", "launch", "--name", self.args.instance_name]
                 self.execute_multipass_command(multipass_launch_command)
-                print(f"{GREEN}Instance {self.args.instance_name} created successfully!\n{NC}")
+                print(f"{Fore.GREEN}Instance {self.args.instance_name} created successfully!\n{Style.RESET_ALL}")
 
                 # transfers the specified project to the multipass session
-                print(f"{GREEN}Transferring the project...\n{NC}")
+                print(f"{Fore.GREEN}Transferring the project...\n{Style.RESET_ALL}")
                 multipass_transfer_command: List[str] = ["multipass", "transfer", "-r", f"{self.args.project}/",
                                                          f"{self.args.instance_name}:."]
                 self.execute_multipass_command(multipass_transfer_command)
-                print(f"{GREEN}{self.project_name} transferred successfully!\n{NC}")
+                print(f"{Fore.GREEN}{self.project_name} transferred successfully!\n{Style.RESET_ALL}")
 
                 # Install the dependencies
                 if self.args.install_dependencies:
                     self.install_dependencies()
 
                 # Opens a shell to the multipass instance
-                print(f"{GREEN}Opening the shell...\n{NC}")
+                print(f"{Fore.GREEN}Opening the shell...\n{Style.RESET_ALL}")
                 multipass_shell_command: List[str] = ["multipass", "shell", self.args.instance_name]
                 subprocess.run(multipass_shell_command)
 
@@ -147,18 +146,18 @@ class CrashTest:
         ).lower().strip()[0]:
             case "y":
                 # Stops the instance
-                print(f"\n{GREEN}Stopping the instance...{NC}")
+                print(f"\n{Fore.GREEN}Stopping the instance...{Style.RESET_ALL}")
                 multipass_stop_command: List[str] = ["multipass", "stop", self.args.instance_name]
                 self.execute_multipass_command(multipass_stop_command)
-                print(f"{GREEN}Instance {self.args.instance_name} stopped.{NC}\n")
+                print(f"{Fore.GREEN}Instance {self.args.instance_name} stopped.{Style.RESET_ALL}\n")
 
                 # Deletes the instance
-                print(f"{GREEN}Deleting the instance {self.args.instance_name}...{NC}\n")
+                print(f"{Fore.GREEN}Deleting the instance {self.args.instance_name}...{Style.RESET_ALL}\n")
                 multipass_delete_command = ["multipass", "delete", self.args.instance_name]
                 self.execute_multipass_command(multipass_delete_command)
-                print(f"{GREEN}Instance deleted!{NC}")
+                print(f"{Fore.GREEN}Instance deleted!{Style.RESET_ALL}")
             case _:
-                print(f"{YELLOW}Elimination aborted.{NC}")
+                print(f"{Fore.YELLOW}Elimination aborted.{Style.RESET_ALL}")
 
 
 def main():
