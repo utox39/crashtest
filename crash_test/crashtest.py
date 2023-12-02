@@ -10,6 +10,7 @@ import crash_test.error_codes
 from crash_test.args_checker import arguments_check
 from crash_test.dependecies_checker import check_dependencies
 from crash_test.error_logger import log_error
+from crash_test._version import __version__
 
 GREEN: Final[str] = "\033[1;32m"
 YELLOW: Final[str] = "\033[1m\033[33m"
@@ -45,6 +46,10 @@ def args_parser():
                         action="store_true",
                         help="Installs the dependencies for the project"
                         )
+    parser.add_argument("-v",
+                        "--version",
+                        action="version",
+                        version=f"%(prog)s {__version__}")
 
     return parser.parse_args()
 
