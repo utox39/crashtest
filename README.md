@@ -5,7 +5,7 @@
 ](https://pypi.org/project/crash-test-multipass/)
 [<img alt="PyPI - Downloads" src="https://img.shields.io/pypi/dw/crash-test-multipass">
 ](https://pypistats.org/packages/crash-test-multipass)
-[<img alt="GitHub Workflow Status (with event)" src="https://img.shields.io/github/actions/workflow/status/utox39/crashtest/.github%2Fworkflows%2Fpython-package.yml">
+[<img alt="GitHub Workflow Status (with event)" src="https://img.shields.io/github/actions/workflow/status/utox39/crashtest/.github%2Fworkflows%2Ftest-package.yml">
 ](https://github.com/utox39/crashtest/actions)
 ---
 
