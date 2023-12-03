@@ -30,6 +30,7 @@ crashtest = "crash_test.crashtest:main"
 
 [tool.poetry.dependencies]
 python = ">=3.10"
+colorama = ">=0.4.6"
 
 
 [build-system]
