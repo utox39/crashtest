@@ -85,7 +85,7 @@ class CrashTest:
         """
         Create the installation script for the dependencies in the multipass instance and executes it.
         """
-        script_content = check_dependencies(self.args.project)
+        script_content = check_dependencies(self.args.project, self.project_name)
 
         if script_content:
             print(f"{Fore.GREEN}Installing dependencies...{Style.RESET_ALL}")
