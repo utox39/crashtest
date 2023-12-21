@@ -8,17 +8,17 @@ def script_generator(project_name: str, project_type: str) -> str:
     commands: Final[dict] = {
         "python": [
             ['#!/usr/bin/env bash\n'],
-            ['echo "Executing: sudo apt-get update"'],
+            ['printf "\nExecuting: sudo apt-get update\n"'],
             ['sudo apt-get update\n'],
-            ['echo "Executing: sudo apt-get upgrade -y"'],
+            ['printf "\nExecuting: sudo apt-get upgrade -y\n"'],
             ['sudo apt-get upgrade -y\n'],
-            ['echo "Executing: sudo apt-get install python3 python3-pip python3-venv -y"'],
+            ['printf "\nExecuting: sudo apt-get install python3 python3-pip python3-venv -y\n"'],
             ['sudo apt-get install python3 python3-pip python3-venv -y\n'],
-            ['echo "Creating the venv..."'],
+            ['printf "\nCreating the venv...\n"'],
             [f'python3 -m venv ./{project_name}/venv\n'],
-            ['echo "Activating the venv..."'],
+            ['printf "\nActivating the venv...\n"'],
             [f'source ./{project_name}/venv/bin/activate\n'],
-            ['echo "Installing requirements..."'],
+            ['printf "\nInstalling requirements...\n"'],
             [f'pip3 install -r ./{project_name}/requirements.txt']
         ]
     }
