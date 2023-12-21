@@ -51,12 +51,12 @@ def args_parser():
 
 
 class CrashTest:
-
     def __init__(self, args):
         self.args = args
 
-        if self.args is not None and self.args.project.endswith("/"):
-            self.args.project = self.args.project[:-1]
+        if self.args:
+            if self.args.project.endswith("/"):
+                self.args.project = self.args.project[:-1]
 
             # The project name without the path
             self.project_name = self.args.project[self.args.project.rfind("/") + 1:]
