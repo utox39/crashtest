@@ -11,7 +11,7 @@ from crash_test.crashtest import CrashTest, args_parser
 from crash_test.dependencies_checker import check_dependencies, find_requirements_file
 from crash_test.error_logger import log_error
 from crash_test.script_selector import script_selector
-from crash_test.utils import get_scripts_absolute_path, check_scripts_path
+from crash_test.utils import get_scripts_absolute_path, check_script_path
 
 
 @pytest.fixture
@@ -228,10 +228,10 @@ class TestUtils:
     def test_check_scripts_path_exists(self, tmp_path):
         tmp_script_path = tmp_path / "test_script_path"
         tmp_script_path.mkdir()
-        assert check_scripts_path(script_path=tmp_script_path) is True
+        assert check_script_path(script_path=tmp_script_path) is True
 
     def test_check_scripts_path_doesnt_exist(self):
-        assert check_scripts_path(script_path="non_existent_path") is False
+        assert check_script_path(script_path="non_existent_path") is False
 
 
 class TestCrashTest:
