@@ -79,7 +79,7 @@ jobs:
       - name: Build and Install package
         run: |
           python -m build
-          python -m pip install .\dist\*.tar.gz
+          pip install .\dist\*.tar.gz
       - name: Lint with flake8
         run: |
           # stop the build if there are Python syntax errors or undefined names
