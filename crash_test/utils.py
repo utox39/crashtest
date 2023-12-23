@@ -27,7 +27,6 @@ def get_scripts_absolute_path(relative_path):
 
     scripts_path = os.path.join(site_packages, relative_path)
 
-    # scripts_path = relative_path
     return scripts_path
 
 
