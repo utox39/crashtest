@@ -5,7 +5,7 @@ import os
 import crash_test.error_codes
 from crash_test.error_logger import log_error
 from crash_test.script_selector import script_selector
-from crash_test.utils import get_scripts_absolute_path, check_scripts_path
+from crash_test.utils import get_scripts_absolute_path, check_script_path
 
 
 # TODO: 2 Add support for npm
@@ -25,7 +25,7 @@ def check_dependencies(project_path: str, scripts_relative_path) -> str:
         project_type = find_requirements_file(project_path=project_path)
         scripts_absolute_path = get_scripts_absolute_path(relative_path=scripts_relative_path)
         if project_type:
-            if check_scripts_path(script_path=scripts_absolute_path):
+            if check_script_path(script_path=scripts_absolute_path):
                 return script_selector(project_type=project_type,
                                        scripts_path=scripts_absolute_path)
         else:
