@@ -13,7 +13,7 @@ from crash_test._version import __version__
 from crash_test.args_checker import arguments_check
 from crash_test.dependencies_checker import check_dependencies
 from crash_test.error_logger import log_error
-from crash_test.utils import get_scripts_absolute_path, check_scripts_path
+from crash_test.utils import get_scripts_absolute_path, check_script_path
 
 SCRIPT_RELATIVE_PATH: Final[str] = "crash_test/scripts"
 
@@ -88,7 +88,7 @@ class CrashTest:
         """
         Create the installation script for the dependencies in the multipass instance and executes it.
         """
-        if check_scripts_path(script_path=get_scripts_absolute_path(SCRIPT_RELATIVE_PATH)):
+        if check_script_path(script_path=get_scripts_absolute_path(SCRIPT_RELATIVE_PATH)):
             script_path = check_dependencies(project_path=self.args.project,
                                              scripts_relative_path=SCRIPT_RELATIVE_PATH)
 

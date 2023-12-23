@@ -20,8 +20,7 @@ def get_scripts_absolute_path(relative_path):
     if sys.platform.startswith("darwin"):
         site_packages = site.getsitepackages()[0]
     elif sys.platform.startswith("linux"):
-        if os.path.exists(site.getusersitepackages()):
-            site_packages = site.getusersitepackages()
+        site_packages = site.getusersitepackages()
     elif sys.platform.startswith("win32"):
         site_packages = site.getsitepackages()[1]
 
@@ -30,7 +29,7 @@ def get_scripts_absolute_path(relative_path):
     return scripts_path
 
 
-def check_scripts_path(script_path) -> bool:
+def check_script_path(script_path) -> bool:
     if os.path.exists(script_path):
         return True
     else:
