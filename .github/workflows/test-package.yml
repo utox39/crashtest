@@ -36,19 +36,17 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install flake8 pytest pytest-cov build
           pip install -r requirements.txt
-      - name: Build and Install package
+      - name: Build and Install package on Linux and Mac OS
+        if: runner.os == "ubuntu-latest" || runner.os == "macOS-latest"
         run: |
-          if [ "${{ runner.os }}" == "Linux" ] || [ "${{ runner.os }}" == "macOS" ]; then
-            python -m build
-            python -m pip install ./dist/*.tar.gz
-          fi
-          
-          if [ "${{ runner.os }}" == "Windows" ]; then
-            python -m build
-            pip install .\dist\crash_test_multipass-1.0.1-py3-none-any.whl
-          fi
-      #          python -m build
-      #          python -m pip install ./dist/*.tar.gz
+          python -m build
+          python -m pip install ./dist/*.tar.gz
+
+      - name: Build and Install package on Windows
+        if: runner.os == "windows-latest"
+        run: |
+          python -m build
+          pip install .\dist\crash_test_multipass-1.0.1-py3-none-any.whl
 
       - name: Lint with flake8
         run: |
