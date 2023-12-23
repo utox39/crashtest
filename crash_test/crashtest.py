@@ -4,7 +4,7 @@ import argparse
 import subprocess
 from shutil import which
 from sys import exit
-from typing import List
+from typing import Final, List
 
 from colorama import Fore, Style
 
@@ -13,6 +13,9 @@ from crash_test._version import __version__
 from crash_test.args_checker import arguments_check
 from crash_test.dependencies_checker import check_dependencies
 from crash_test.error_logger import log_error
+from crash_test.utils import get_scripts_absolute_path, check_scripts_path
+
+SCRIPT_RELATIVE_PATH: Final[str] = "crash_test/scripts"
 
 
 def args_parser():
@@ -85,22 +88,24 @@ class CrashTest:
         """
         Create the installation script for the dependencies in the multipass instance and executes it.
         """
-        script_content = check_dependencies(self.args.project, self.project_name)
+        if check_scripts_path(script_path=get_scripts_absolute_path(SCRIPT_RELATIVE_PATH)):
+            script_path = check_dependencies(project_path=self.args.project,
+                                             scripts_relative_path=SCRIPT_RELATIVE_PATH)
 
-        if script_content:
-            print(f"{Fore.GREEN}Installing dependencies...{Style.RESET_ALL}")
+            if script_path:
+                print(f"{Fore.GREEN}Installing dependencies...{Style.RESET_ALL}")
 
-            create_script_command = ["multipass", "exec", f"{self.args.instance_name}", "--", "sh", "-c",
-                                     f'echo "{script_content}" > ./{self.project_name}/python_dependencies.sh']
+                transfer_script_command = ["multipass", "transfer", "-r", f"{script_path}",
+                                           f"{self.args.instance_name}:./{self.project_name}"]
 
-            self.execute_multipass_command(create_script_command)
+                self.execute_multipass_command(transfer_script_command)
 
-            run_script_command = ["multipass", "exec", f"{self.args.instance_name}", "--", "bash",
-                                  f"./{self.project_name}/python_dependencies.sh"]
+                run_script_command = ["multipass", "exec", f"{self.args.instance_name}", "--", "bash",
+                                      f"./{self.project_name}/python_dependencies.sh", f"{self.project_name}"]
 
-            self.execute_multipass_command(run_script_command)
-        else:
-            print(log_error(error_code=crash_test.error_codes.NO_DEPENDENCIES_FOUND_ERROR))
+                self.execute_multipass_command(run_script_command)
+            else:
+                print(log_error(error_code=crash_test.error_codes.NO_DEPENDENCIES_FOUND_ERROR))
 
     def create_instance(self) -> None:
         """
