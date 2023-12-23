@@ -79,7 +79,7 @@ jobs:
       - name: Build and Install package
         run: |
           python -m build
-          pip install .\dist\*.whl
+          pip install .\dist\crash_test_multipass-1.0.1-py3-none-any.whl
       - name: Lint with flake8
         run: |
           # stop the build if there are Python syntax errors or undefined names
