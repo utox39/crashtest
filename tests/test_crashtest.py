@@ -8,9 +8,10 @@ from colorama import Fore, Style
 import crash_test.error_codes
 from crash_test.args_checker import instance_name_check, project_check, arguments_check
 from crash_test.crashtest import CrashTest, args_parser
-from crash_test.dependecies_checker import check_dependencies
+from crash_test.dependencies_checker import check_dependencies, find_requirements_file
 from crash_test.error_logger import log_error
-from crash_test.script_generator import script_generator
+from crash_test.script_selector import script_selector
+from crash_test.utils import get_scripts_absolute_path, check_scripts_path
 
 
 @pytest.fixture
@@ -75,28 +76,27 @@ class TestArgsCheck:
         assert arguments_check(instance_name="valid-instance-name", project_path="invalid/path") is False
 
 
-class TestScriptGenerator:
-    def test_script_generator_returns_script_content(self):
+class TestScriptSelector:
+    def test_script_selector_returns_script_path(self, tmp_path):
         """
-        Tests that script_generator() returns script content.
+        Tests that script_selector() returns script path.
         """
-        script_content = script_generator(project_name="test_project", project_type="python")
-        assert script_content is not None
+        tmp_script_path = tmp_path / "test_script_path"
+        tmp_script_path.mkdir()
+        script_path = script_selector(project_type="python", scripts_path=tmp_script_path)
+        assert script_path is not None
 
-    def test_script_generator_returns_correct_script_content(self):
-        """
-        Tests that script_generator() generates correct script content.
-        """
-        test_project_name = "test_project"
-        test_project_type = "python"
-        script_content = script_generator(project_name=test_project_name, project_type=test_project_type)
-        assert (test_project_name in script_content and test_project_type in script_content) is True
+    def test_script_selector_project_type_does_not_exist(self, tmp_path):
+        tmp_script_path = tmp_path / "test_script_path"
+        tmp_script_path.mkdir()
+        script_path = script_selector(project_type="test", scripts_path=tmp_script_path)
+        assert script_path is None
 
 
-class TestDependencyCheck:
+class TestDependenciesCheck:
     def test_check_dependencies_returns_script_content(self, tmp_path):
         """
-        Tests that check_dependencies() returns script content based on the project type.
+        Tests that check_dependencies() returns script path based on the project type.
         """
         tmp_project_path = tmp_path / "test_project"
         tmp_project_path.mkdir()
@@ -104,21 +104,63 @@ class TestDependencyCheck:
         with open(f"{tmp_project_path}/requirements.txt", "w") as file:
             file.write("test")
 
-        script_content = check_dependencies(project_path=str(tmp_project_path))
-        assert script_content is not None
+        tmp_script_relative_path = tmp_path / "test_script_path"
+        tmp_script_relative_path.mkdir()
 
-    def test_check_dependencies_non_existent_path(self):
-        assert check_dependencies(project_path="invalid/path") is None
+        script_path = check_dependencies(project_path=str(tmp_project_path),
+                                         scripts_relative_path=tmp_script_relative_path)
+        assert script_path is not None
 
-    def test_check_dependencies_unsupported_dependencies_file(self, tmp_path):
+    def test_check_dependencies_non_existent_project_path(self, tmp_path):
+        """
+        Tests that check_dependencies() returns None when the project folder doesn't exist.
+        """
+        tmp_script_relative_path = tmp_path / "test_script_path"
+        tmp_script_relative_path.mkdir()
+        assert check_dependencies(project_path="invalid/path", scripts_relative_path=tmp_script_relative_path) is None
+
+    def test_check_dependencies_not_supported_requirements(self, tmp_path):
+        """
+        Tests that check_dependencies() returns None when the requirements file is not supported.
+        """
+        tmp_project_path = tmp_path / "test_project2"
+        tmp_project_path.mkdir()
+
+        with open(f"{tmp_project_path}/non_supported_requirements.txt", "w") as file:
+            file.write("test")
+
+        tmp_script_relative_path = tmp_path / "test_script_path"
+        tmp_script_relative_path.mkdir()
+
+        script_path = check_dependencies(project_path=str(tmp_project_path),
+                                         scripts_relative_path=tmp_script_relative_path)
+        assert script_path is None
+
+    def test_find_requirements_file_case_requirements_txt(self, tmp_path):
         tmp_project_path = tmp_path / "test_project"
         tmp_project_path.mkdir()
 
-        with open(f"{tmp_project_path}/unsupported_requirements.txt", "w") as file:
+        with open(f"{tmp_project_path}/requirements.txt", "w") as file:
             file.write("test")
 
-        script_content = check_dependencies(project_path=str(tmp_project_path))
-        assert script_content is None
+        project_type = find_requirements_file(project_path=tmp_project_path)
+
+        assert project_type == "python"
+
+    def test_find_requirements_file_not_supported_requirements(self, tmp_path):
+        tmp_project_path = tmp_path / "test_project"
+        tmp_project_path.mkdir()
+
+        with open(f"{tmp_project_path}/not_supported_requirements.txt", "w") as file:
+            file.write("test")
+
+        project_type = find_requirements_file(project_path=tmp_project_path)
+
+        assert project_type is None
+
+    def test_find_requirements_file_non_existent_project(self, tmp_path):
+        project_type = find_requirements_file(project_path="non_existent_project")
+        assert project_type is None
 
 
 class TestErrorLogger:
@@ -133,18 +175,19 @@ class TestErrorLogger:
                        crash_test.error_codes.MULTIPASS_NOT_INSTALLED_ERROR,
                        crash_test.error_codes.INVALID_INSTANCE_NAME_ERROR,
                        crash_test.error_codes.NO_DEPENDENCIES_FOUND_ERROR,
-                       crash_test.error_codes.NO_SUPPORTED_REQUIREMENTS_FILE_FOUND_ERROR
+                       crash_test.error_codes.NO_SUPPORTED_REQUIREMENTS_FILE_FOUND_ERROR,
+                       crash_test.error_codes.SCRIPT_FOLDER_NOT_FOUND_ERROR
                        ]
 
-        test_project_path = "test/path"
+        test_path = "test/path"
 
         for error in error_codes:
             match error:
                 case crash_test.error_codes.NO_SUCH_FILE_OR_DIRECTORY_ERROR:
                     assert (log_error(
                         error_code=crash_test.error_codes.NO_SUCH_FILE_OR_DIRECTORY_ERROR,
-                        project_path=test_project_path
-                    ) == f"crashtest: error: cannot access {test_project_path}: No such file or directory.") is True
+                        project_path=test_path
+                    ) == f"crashtest: error: cannot access {test_path}: No such file or directory.") is True
                 case crash_test.error_codes.SINGLE_FILE_ERROR:
                     assert (log_error(
                         error_code=crash_test.error_codes.SINGLE_FILE_ERROR
@@ -169,6 +212,26 @@ class TestErrorLogger:
                     assert (log_error(
                         error_code=crash_test.error_codes.NO_SUPPORTED_REQUIREMENTS_FILE_FOUND_ERROR
                     ) == f"{Fore.YELLOW}No supported project requirements file was found!{Style.RESET_ALL}\n") is True
+                case crash_test.error_codes.SCRIPT_FOLDER_NOT_FOUND_ERROR:
+                    assert (
+                            log_error(
+                                error_code=crash_test.error_codes.SCRIPT_FOLDER_NOT_FOUND_ERROR,
+                                script_path=test_path
+                            ) == f"crashtest: error: cannot access {test_path}: No such file or directory."
+                    )
+
+
+class TestUtils:
+    def test_get_script_absolute_path(self):
+        assert get_scripts_absolute_path(relative_path="test/path") is not None
+
+    def test_check_scripts_path_exists(self, tmp_path):
+        tmp_script_path = tmp_path / "test_script_path"
+        tmp_script_path.mkdir()
+        assert check_scripts_path(script_path=tmp_script_path) is True
+
+    def test_check_scripts_path_doesnt_exist(self):
+        assert check_scripts_path(script_path="non_existent_path") is False
 
 
 class TestCrashTest:
