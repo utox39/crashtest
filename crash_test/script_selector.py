@@ -3,6 +3,9 @@
 from typing import Final
 
 
+# TODO: 3 implementare la scelta dello script (Attenzione: la cartella degli script si troverà nel site package)
+# TODO: 2 Add support for npm
+
 def script_generator(project_name: str, project_type: str) -> str:
     script_content = ""
     commands: Final[dict] = {
