@@ -2,10 +2,6 @@
 
 import os
 
-from crash_test.utils import get_scripts_absolute_path
-
-
-# TODO: 2 Add support for npm
 
 def script_selector(project_type: str, scripts_path) -> str:
     if os.path.exists(scripts_path):

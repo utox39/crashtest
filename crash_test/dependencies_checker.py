@@ -8,9 +8,6 @@ from crash_test.script_selector import script_selector
 from crash_test.utils import get_scripts_absolute_path, check_script_path
 
 
-# TODO: 2 Add support for npm
-
-
 def find_requirements_file(project_path):
     if os.path.exists(project_path):
         files = [element for element in os.listdir(project_path) if element is not os.path.isdir(element)]
