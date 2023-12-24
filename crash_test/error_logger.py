@@ -5,7 +5,7 @@ from colorama import Fore, Style
 import crash_test.error_codes
 
 
-def log_error(error_code: int, project_path: str = "") -> str:
+def log_error(error_code: int, project_path: str = "", script_path: str = "") -> str:
     match error_code:
         case crash_test.error_codes.NO_SUCH_FILE_OR_DIRECTORY_ERROR:
             return f"crashtest: error: cannot access {project_path}: No such file or directory."
@@ -21,3 +21,5 @@ def log_error(error_code: int, project_path: str = "") -> str:
             return f"{Fore.YELLOW}No dependencies detected.{Style.RESET_ALL}\n"
         case crash_test.error_codes.NO_SUPPORTED_REQUIREMENTS_FILE_FOUND_ERROR:
             return f"{Fore.YELLOW}No supported project requirements file was found!{Style.RESET_ALL}\n"
+        case crash_test.error_codes.SCRIPT_FOLDER_NOT_FOUND_ERROR:
+            return f"crashtest: error: cannot access {script_path}: No such file or directory."
