@@ -107,8 +107,6 @@ class CrashTest:
                                       f"./{self.project_name}/install_dependencies.sh", f"{self.project_name}"]
 
                 self.execute_multipass_command(run_script_command)
-            else:
-                print(log_error(error_code=crash_test.error_codes.NO_DEPENDENCIES_FOUND_ERROR))
 
     def create_instance(self) -> None:
         """
