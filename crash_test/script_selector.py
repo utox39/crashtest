@@ -8,3 +8,5 @@ def script_selector(project_type: str, scripts_path) -> str:
         match project_type:
             case "python":
                 return os.path.join(scripts_path, "python_dependencies.sh")
+            case "npm":
+                return os.path.join(scripts_path, "npm_dependencies.sh")
