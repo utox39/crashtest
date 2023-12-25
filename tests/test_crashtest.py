@@ -174,7 +174,6 @@ class TestErrorLogger:
                        crash_test.error_codes.MULTIPASS_GENERIC_ERROR,
                        crash_test.error_codes.MULTIPASS_NOT_INSTALLED_ERROR,
                        crash_test.error_codes.INVALID_INSTANCE_NAME_ERROR,
-                       crash_test.error_codes.NO_DEPENDENCIES_FOUND_ERROR,
                        crash_test.error_codes.NO_SUPPORTED_REQUIREMENTS_FILE_FOUND_ERROR,
                        crash_test.error_codes.SCRIPT_FOLDER_NOT_FOUND_ERROR
                        ]
@@ -204,10 +203,6 @@ class TestErrorLogger:
                     assert (log_error(
                         error_code=crash_test.error_codes.INVALID_INSTANCE_NAME_ERROR
                     ) == "crashtest: error: invalid instance name. The instance name should be like this: ") is True
-                case crash_test.error_codes.NO_DEPENDENCIES_FOUND_ERROR:
-                    assert (log_error(
-                        error_code=crash_test.error_codes.NO_DEPENDENCIES_FOUND_ERROR
-                    ) == f"{Fore.YELLOW}No dependencies detected.{Style.RESET_ALL}\n") is True
                 case crash_test.error_codes.NO_SUPPORTED_REQUIREMENTS_FILE_FOUND_ERROR:
                     assert (log_error(
                         error_code=crash_test.error_codes.NO_SUPPORTED_REQUIREMENTS_FILE_FOUND_ERROR
