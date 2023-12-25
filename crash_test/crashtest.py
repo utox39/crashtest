@@ -65,7 +65,10 @@ class CrashTest:
             self.project_name = self.args.project[self.args.project.rfind("/") + 1:]
 
     def run(self):
-        self.create_instance()
+        if which("multipass") is not None:
+            self.create_instance()
+        else:
+            print(log_error(error_code=crash_test.error_codes.MULTIPASS_NOT_INSTALLED_ERROR))
 
     @staticmethod
     def execute_multipass_command(command) -> None:
@@ -96,12 +99,12 @@ class CrashTest:
                 print(f"{Fore.GREEN}Installing dependencies...{Style.RESET_ALL}")
 
                 transfer_script_command = ["multipass", "transfer", "-r", f"{script_path}",
-                                           f"{self.args.instance_name}:./{self.project_name}"]
+                                           f"{self.args.instance_name}:./{self.project_name}/install_dependencies.sh"]
 
                 self.execute_multipass_command(transfer_script_command)
 
                 run_script_command = ["multipass", "exec", f"{self.args.instance_name}", "--", "bash",
-                                      f"./{self.project_name}/python_dependencies.sh", f"{self.project_name}"]
+                                      f"./{self.project_name}/install_dependencies.sh", f"{self.project_name}"]
 
                 self.execute_multipass_command(run_script_command)
             else:
@@ -111,35 +114,32 @@ class CrashTest:
         """
         Creates a Multipass instance and transfer the specified project to the newly created instance
         """
-        if which("multipass") is not None:
-            if arguments_check(instance_name=self.args.instance_name, project_path=self.args.project):
-                # creates multipass session
-                print(f"{Fore.GREEN}Creating multipass instance...\n{Style.RESET_ALL}")
-                multipass_launch_command: List[str] = ["multipass", "launch", "--name", self.args.instance_name]
-                self.execute_multipass_command(multipass_launch_command)
-                print(f"{Fore.GREEN}Instance {self.args.instance_name} created successfully!\n{Style.RESET_ALL}")
+        if arguments_check(instance_name=self.args.instance_name, project_path=self.args.project):
+            # creates multipass session
+            print(f"{Fore.GREEN}Creating multipass instance...\n{Style.RESET_ALL}")
+            multipass_launch_command: List[str] = ["multipass", "launch", "--name", self.args.instance_name]
+            self.execute_multipass_command(multipass_launch_command)
+            print(f"{Fore.GREEN}Instance {self.args.instance_name} created successfully!\n{Style.RESET_ALL}")
 
-                # transfers the specified project to the multipass session
-                print(f"{Fore.GREEN}Transferring the project...\n{Style.RESET_ALL}")
-                multipass_transfer_command: List[str] = ["multipass", "transfer", "-r", f"{self.args.project}/",
-                                                         f"{self.args.instance_name}:."]
-                self.execute_multipass_command(multipass_transfer_command)
-                print(f"{Fore.GREEN}{self.project_name} transferred successfully!\n{Style.RESET_ALL}")
+            # transfers the specified project to the multipass session
+            print(f"{Fore.GREEN}Transferring the project...\n{Style.RESET_ALL}")
+            multipass_transfer_command: List[str] = ["multipass", "transfer", "-r", f"{self.args.project}/",
+                                                     f"{self.args.instance_name}:."]
+            self.execute_multipass_command(multipass_transfer_command)
+            print(f"{Fore.GREEN}{self.project_name} transferred successfully!\n{Style.RESET_ALL}")
 
-                # Install the dependencies
-                if self.args.install_dependencies:
-                    self.install_dependencies()
+            # Install the dependencies
+            if self.args.install_dependencies:
+                self.install_dependencies()
 
-                # Opens a shell to the multipass instance
-                print(f"{Fore.GREEN}Opening the shell...\n{Style.RESET_ALL}")
-                multipass_shell_command: List[str] = ["multipass", "shell", self.args.instance_name]
-                subprocess.run(multipass_shell_command)
+            # Opens a shell to the multipass instance
+            print(f"{Fore.GREEN}Opening the shell...\n{Style.RESET_ALL}")
+            multipass_shell_command: List[str] = ["multipass", "shell", self.args.instance_name]
+            subprocess.run(multipass_shell_command)
 
-                # Delete the instance if the --delete flag is specified
-                if self.args.delete:
-                    self.delete_instance()
-        else:
-            print(log_error(error_code=crash_test.error_codes.MULTIPASS_NOT_INSTALLED_ERROR))
+            # Delete the instance if the --delete flag is specified
+            if self.args.delete:
+                self.delete_instance()
 
     def delete_instance(self) -> None:
         """
