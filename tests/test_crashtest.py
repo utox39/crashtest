@@ -77,9 +77,18 @@ class TestArgsCheck:
 
 
 class TestScriptSelector:
-    def test_script_selector_returns_script_path(self, tmp_path):
+    def test_script_selector_returns_python_dependencies_installation_script_path(self, tmp_path):
         """
-        Tests that script_selector() returns script path.
+        Tests that script_selector() returns python dependencies installation script path.
+        """
+        tmp_script_path = tmp_path / "test_script_path"
+        tmp_script_path.mkdir()
+        script_path = script_selector(project_type="python", scripts_path=tmp_script_path)
+        assert script_path is not None
+
+    def test_script_selector_returns_npm_dependencies_installation_script_path(self, tmp_path):
+        """
+        Tests that script_selector() returns npm package dependencies installation script path.
         """
         tmp_script_path = tmp_path / "test_script_path"
         tmp_script_path.mkdir()
@@ -94,15 +103,32 @@ class TestScriptSelector:
 
 
 class TestDependenciesCheck:
-    def test_check_dependencies_returns_script_content(self, tmp_path):
+    def test_check_dependencies_returns_python_dependencies_installation_script_path(self, tmp_path):
         """
-        Tests that check_dependencies() returns script path based on the project type.
+        Tests that check_dependencies() returns python dependencies script path.
         """
         tmp_project_path = tmp_path / "test_project"
         tmp_project_path.mkdir()
 
         with open(f"{tmp_project_path}/requirements.txt", "w") as file:
             file.write("test")
+
+        tmp_script_relative_path = tmp_path / "test_script_path"
+        tmp_script_relative_path.mkdir()
+
+        script_path = check_dependencies(project_path=str(tmp_project_path),
+                                         scripts_relative_path=tmp_script_relative_path)
+        assert script_path is not None
+
+    def test_check_dependencies_returns_npm_dependencies_installation_script_path(self, tmp_path):
+        """
+        Tests that check_dependencies() returns npm package dependencies script path.
+        """
+        tmp_project_path = tmp_path / "test_project"
+        tmp_project_path.mkdir()
+
+        with open(f"{tmp_project_path}/package.json", "w") as file:
+            file.write("test2")
 
         tmp_script_relative_path = tmp_path / "test_script_path"
         tmp_script_relative_path.mkdir()
@@ -147,6 +173,17 @@ class TestDependenciesCheck:
 
         assert project_type == "python"
 
+    def test_find_requirements_file_case_package_json(self, tmp_path):
+        tmp_project_path = tmp_path / "test_project"
+        tmp_project_path.mkdir()
+
+        with open(f"{tmp_project_path}/package.json", "w") as file:
+            file.write("test")
+
+        project_type = find_requirements_file(project_path=tmp_project_path)
+
+        assert project_type == "npm"
+
     def test_find_requirements_file_not_supported_requirements(self, tmp_path):
         tmp_project_path = tmp_path / "test_project"
         tmp_project_path.mkdir()
@@ -174,7 +211,6 @@ class TestErrorLogger:
                        crash_test.error_codes.MULTIPASS_GENERIC_ERROR,
                        crash_test.error_codes.MULTIPASS_NOT_INSTALLED_ERROR,
                        crash_test.error_codes.INVALID_INSTANCE_NAME_ERROR,
-                       crash_test.error_codes.NO_DEPENDENCIES_FOUND_ERROR,
                        crash_test.error_codes.NO_SUPPORTED_REQUIREMENTS_FILE_FOUND_ERROR,
                        crash_test.error_codes.SCRIPT_FOLDER_NOT_FOUND_ERROR
                        ]
@@ -204,10 +240,6 @@ class TestErrorLogger:
                     assert (log_error(
                         error_code=crash_test.error_codes.INVALID_INSTANCE_NAME_ERROR
                     ) == "crashtest: error: invalid instance name. The instance name should be like this: ") is True
-                case crash_test.error_codes.NO_DEPENDENCIES_FOUND_ERROR:
-                    assert (log_error(
-                        error_code=crash_test.error_codes.NO_DEPENDENCIES_FOUND_ERROR
-                    ) == f"{Fore.YELLOW}No dependencies detected.{Style.RESET_ALL}\n") is True
                 case crash_test.error_codes.NO_SUPPORTED_REQUIREMENTS_FILE_FOUND_ERROR:
                     assert (log_error(
                         error_code=crash_test.error_codes.NO_SUPPORTED_REQUIREMENTS_FILE_FOUND_ERROR

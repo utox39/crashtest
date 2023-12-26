@@ -15,6 +15,8 @@ def find_requirements_file(project_path):
             match file:
                 case "requirements.txt":
                     return "python"
+                case "package.json":
+                    return "npm"
 
 
 def check_dependencies(project_path: str, scripts_relative_path) -> str:

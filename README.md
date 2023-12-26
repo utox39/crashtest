@@ -49,7 +49,8 @@ $ crashtest --instance-name INSTANCE_NAME --project PROJECT
 
 #### Create a new instance, transfer a project and install the dependencies
 
-NOTE: Currently only requirements.txt (python) is supported
+NOTE: To install npm package dependencies, the latest stable version of [nvm](https://github.com/nvm-sh/nvm) will be
+installed in the new multipass instance, which will install the latest LTS version of Node.
 
 ```console
 $ crashtest --instance-name INSTANCE_NAME --project PROJECT --install-dependencies

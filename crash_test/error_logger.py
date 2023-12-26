@@ -17,8 +17,6 @@ def log_error(error_code: int, project_path: str = "", script_path: str = "") ->
             return "crashtest: error: Multipass is not installed!"
         case crash_test.error_codes.INVALID_INSTANCE_NAME_ERROR:
             return "crashtest: error: invalid instance name. The instance name should be like this: "
-        case crash_test.error_codes.NO_DEPENDENCIES_FOUND_ERROR:
-            return f"{Fore.YELLOW}No dependencies detected.{Style.RESET_ALL}\n"
         case crash_test.error_codes.NO_SUPPORTED_REQUIREMENTS_FILE_FOUND_ERROR:
             return f"{Fore.YELLOW}No supported project requirements file was found!{Style.RESET_ALL}\n"
         case crash_test.error_codes.SCRIPT_FOLDER_NOT_FOUND_ERROR:
