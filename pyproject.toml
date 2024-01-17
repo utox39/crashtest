@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "crash-test-multipass"
-version = "1.1"
+version = "1.1.post1"
 description = "A command-line tool to create a Multipass instance and transfer a project to test to the newly created instance"
 authors = ["utox39 <francescomoccaldi39@gmail.com>"]
 license = "MIT"
