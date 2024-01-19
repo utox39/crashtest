@@ -23,5 +23,5 @@ jobs:
       - name: Run Shellcheck
         run: |
           ls $GITHUB_WORKSPACE
-          shellcheck $GITHUB_WORKSPACE/scripts/npm_dependencies.sh
-          shellcheck $GITHUB_WORKSPACE/scripts/python_dependencies.sh
+          shellcheck $GITHUB_WORKSPACE/crash_test/scripts/npm_dependencies.sh
+          shellcheck $GITHUB_WORKSPACE/crash_test/scripts/python_dependencies.sh
