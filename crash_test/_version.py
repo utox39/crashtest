@@ -1,2 +1,2 @@
 # crashtest version
-__version__ = "1.1.post1"
+__version__ = "1.1.1"
