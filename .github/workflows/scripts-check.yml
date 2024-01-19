@@ -3,12 +3,12 @@ name: Test Scripts via Shellcheck
 on:
   push:
     branches: [ "main", "dev" ]
-  #    paths:
-  #      - 'crash_test/scripts/**'
+    paths:
+      - 'crash_test/scripts/**'
   pull_request:
     branches: [ "main", "dev" ]
-#    paths:
-#      - 'crash_test/scripts/**'
+    paths:
+      - 'crash_test/scripts/**'
 
 jobs:
   build:
