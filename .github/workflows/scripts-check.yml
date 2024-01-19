@@ -22,5 +22,5 @@ jobs:
           sudo apt-get install shellcheck -y
       - name: Run Shellcheck
         run: |
-          shellcheck $GITHUB_WORKSPACE/crash-test/crash_test/scripts/npm_dependencies.sh
-          shellcheck $GITHUB_WORKSPACE/crash-test/crash_test/scripts/python_dependencies.sh
+          shellcheck $GITHUB_WORKSPACE/scripts/npm_dependencies.sh
+          shellcheck $GITHUB_WORKSPACE/scripts/python_dependencies.sh
