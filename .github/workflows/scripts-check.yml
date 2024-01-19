@@ -19,9 +19,8 @@ jobs:
       - name: Install Shellcheck
         run: |
           sudo apt-get update
-          sudo apt-get upgrade -y
           sudo apt-get install shellcheck -y
       - name: Run Shellcheck
         run: |
-          shellcheck ./scripts/npm_dependencies.sh
-          shellcheck ./scripts/python_dependencies.sh
+          shellcheck $GITHUB_WORKSPACE/crash_test/scripts/npm_dependencies.sh
+          shellcheck $GITHUB_WORKSPACE/crash_test/scripts/python_dependencies.sh
