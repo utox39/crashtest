@@ -3,12 +3,12 @@ name: Test Scripts via Shellcheck
 on:
   push:
     branches: [ "main", "dev" ]
-    paths:
-      - 'crash_test/scripts/**'
+  #    paths:
+  #      - 'crash_test/scripts/**'
   pull_request:
     branches: [ "main", "dev" ]
-    paths:
-      - 'crash_test/scripts/**'
+#    paths:
+#      - 'crash_test/scripts/**'
 
 jobs:
   build:
@@ -19,9 +19,8 @@ jobs:
       - name: Install Shellcheck
         run: |
           sudo apt-get update
-          sudo apt-get upgrade -y
           sudo apt-get install shellcheck -y
       - name: Run Shellcheck
         run: |
-          shellcheck ./scripts/npm_dependencies.sh
-          shellcheck ./scripts/python_dependencies.sh
+          shellcheck $GITHUB_WORKSPACE/crash-test/crash_test/scripts/npm_dependencies.sh
+          shellcheck $GITHUB_WORKSPACE/crash-test/crash_test/scripts/python_dependencies.sh
