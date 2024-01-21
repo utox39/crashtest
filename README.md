@@ -56,6 +56,14 @@ installed in the new multipass instance, which will install the latest LTS versi
 $ crashtest --instance-name INSTANCE_NAME --project PROJECT --install-dependencies
 ```
 
+#### Execute a custom script
+
+> The script is executed in the home folder
+
+```console
+$ crashtest --instance-name INSTANCE_NAME --project PROJECT --script SCRIPT
+```
+
 #### Delete the instance after finishing to test
 
 ```console
