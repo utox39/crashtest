@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import argparse
+import os.path
 import subprocess
 from shutil import which
 from sys import exit
@@ -44,6 +45,11 @@ def args_parser():
     parser.add_argument("--install-dependencies",
                         action="store_true",
                         help="Installs the dependencies for the project"
+                        )
+    parser.add_argument("-s",
+                        "--script",
+                        type=str,
+                        help="Execute a custom script"
                         )
     parser.add_argument("-v",
                         "--version",
@@ -108,6 +114,21 @@ class CrashTest:
 
                 self.execute_multipass_command(run_script_command)
 
+    def execute_custom_script(self) -> None:
+        if os.path.exists(self.args.script):
+            # transfers the script to the project folder in the multipass session
+            print(f"{Fore.GREEN}Transferring the script...\n{Style.RESET_ALL}")
+            multipass_transfer_command: List[str] = ["multipass", "transfer", "-r", f"{self.args.script}",
+                                                     f"{self.args.instance_name}:./{self.project_name}/"]
+            self.execute_multipass_command(multipass_transfer_command)
+            print(f"{Fore.GREEN}{self.args.script} transferred successfully!\n{Style.RESET_ALL}")
+
+            # Run the script
+            run_script_command = ["multipass", "exec", f"{self.args.instance_name}", "--", "bash",
+                                  f"./{self.project_name}/{self.args.script[self.args.script.rfind("/"):]}"]
+
+            self.execute_multipass_command(run_script_command)
+
     def create_instance(self) -> None:
         """
         Creates a Multipass instance and transfer the specified project to the newly created instance
@@ -129,6 +150,10 @@ class CrashTest:
             # Install the dependencies
             if self.args.install_dependencies:
                 self.install_dependencies()
+
+            # Execute a custom script
+            if self.args.script:
+                self.execute_custom_script()
 
             # Opens a shell to the multipass instance
             print(f"{Fore.GREEN}Opening the shell...\n{Style.RESET_ALL}")
