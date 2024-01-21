@@ -125,7 +125,7 @@ class CrashTest:
 
             # Run the script
             run_script_command = ["multipass", "exec", f"{self.args.instance_name}", "--", "bash",
-                                  f"./{self.project_name}/{self.args.script[self.args.script.rfind("/"):]}"]
+                                  f"./{self.project_name}/{self.args.script[self.args.script.rfind('/'):]}"]
 
             self.execute_multipass_command(run_script_command)
 
