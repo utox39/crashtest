@@ -1,5 +1,8 @@
 # Crashtest
 
+> [!WARNING]
+> THIS PROJECT IS NO LONGER SUPPORTED.
+
 [![codecov](https://codecov.io/gh/utox39/crashtest/graph/badge.svg?token=WH50XIU1V9)](https://codecov.io/gh/utox39/crashtest)
 [<img alt="PyPI - Version" src="https://img.shields.io/pypi/v/crash-test-multipass">
 ](https://pypi.org/project/crash-test-multipass/)
